@@ -47,11 +47,14 @@ class Watch < XChatRubyPlugin
     channel = get_info('channel')
     nick = get_info('nick')
     mention = words[1] =~ /#{nick}/
+    
     if channels.include?(channel) or
         mention
-      title = "<#{words[0]}> on #{channel}"
-      notify(title, words[1], mention)
-      play_sound if mention
+      Thread.new do
+        title = "<#{words[0]}> on #{channel}"
+        notify(title, words[1], mention)
+        play_sound if mention
+      end
     end
 
     mention ? hilight_full_message(words, nick, data) : XCHAT_EAT_NONE
